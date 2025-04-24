@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { mockRiders, mockRides, getUpcomingEvents } from '../data/mockData';
 
 import {
-  Users, Calendar, Check, AlertTriangle, BirthdayCake
+  Users, Calendar, Check, AlertTriangle, Cake
 } from 'lucide-react';
 
 const Dashboard = () => {

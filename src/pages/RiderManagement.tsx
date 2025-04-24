@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import DashboardLayout from '../components/layout/DashboardLayout';
@@ -21,7 +20,7 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { mockRiders, formatDate, Rider } from '../data/mockData';
-import { Search, Filter, Phone, Check, X, BirthdayCake, User } from 'lucide-react';
+import { Search, Filter, Phone, Check, X, Cake, User } from 'lucide-react';
 
 const RiderManagement = () => {
   const [riders, setRiders] = useState<Rider[]>(mockRiders);
@@ -29,17 +28,13 @@ const RiderManagement = () => {
   const [statusFilter, setStatusFilter] = useState('all');
   const [birthdayMonthFilter, setBirthdayMonthFilter] = useState('all');
   
-  // Filtered riders
   const filteredRiders = React.useMemo(() => {
     return riders.filter(rider => {
-      // Search filter
       const searchMatch = rider.fullName.toLowerCase().includes(searchQuery.toLowerCase()) ||
         rider.phoneNumber.includes(searchQuery);
       
-      // Status filter
       const statusMatch = statusFilter === 'all' || rider.status === statusFilter;
       
-      // Birthday month filter
       let birthdayMatch = true;
       if (birthdayMonthFilter !== 'all') {
         const month = new Date(rider.dateOfBirth).getMonth() + 1;
@@ -50,7 +45,6 @@ const RiderManagement = () => {
     });
   }, [riders, searchQuery, statusFilter, birthdayMonthFilter]);
 
-  // Export to CSV
   const exportToCSV = () => {
     const headers = [
       'ID',
@@ -102,7 +96,6 @@ const RiderManagement = () => {
     document.body.removeChild(link);
   };
 
-  // Check if rider has birthday or anniversary this month
   const hasSpecialEvent = (rider: Rider): { type: string | null, day: number | null } => {
     const today = new Date();
     const currentMonth = today.getMonth();
@@ -132,7 +125,6 @@ const RiderManagement = () => {
           </Button>
         </div>
         
-        {/* Filters */}
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
@@ -141,7 +133,6 @@ const RiderManagement = () => {
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              {/* Search */}
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input
@@ -152,7 +143,6 @@ const RiderManagement = () => {
                 />
               </div>
               
-              {/* Status filter */}
               <Select
                 value={statusFilter}
                 onValueChange={setStatusFilter}
@@ -167,7 +157,6 @@ const RiderManagement = () => {
                 </SelectContent>
               </Select>
               
-              {/* Birthday month filter */}
               <Select
                 value={birthdayMonthFilter}
                 onValueChange={setBirthdayMonthFilter}
@@ -195,7 +184,6 @@ const RiderManagement = () => {
           </CardContent>
         </Card>
         
-        {/* Riders Table */}
         <Card className="overflow-hidden">
           <CardContent className="p-0">
             <div className="rounded-md border">
@@ -225,7 +213,7 @@ const RiderManagement = () => {
                             {specialEvent.type && (
                               <div className="ml-2 text-cycling-red">
                                 {specialEvent.type === 'birthday' ? (
-                                  <BirthdayCake className="h-4 w-4" />
+                                  <Cake className="h-4 w-4" />
                                 ) : (
                                   <User className="h-4 w-4" />
                                 )}

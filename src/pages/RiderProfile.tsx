@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import DashboardLayout from '../components/layout/DashboardLayout';
@@ -31,35 +30,28 @@ import {
 } from '@/components/ui/tabs';
 import { toast } from '../components/ui/use-toast';
 import { mockRiders, mockRides, formatDate, calculateAge } from '../data/mockData';
-import { ArrowLeft, Phone, Calendar, User, Car, AlertTriangle, BirthdayCake } from 'lucide-react';
+import { ArrowLeft, Phone, Calendar, User, Car, AlertTriangle, Cake } from 'lucide-react';
 
 const RiderProfile = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   
-  // Find rider data
   const rider = mockRiders.find(r => r.id === id);
   
-  // Find rider's rides
   const riderRides = mockRides.filter(ride => ride.participants.includes(id || ''));
   
-  // State for editable fields
   const [notes, setNotes] = useState(rider?.notes || '');
   const [gearVerified, setGearVerified] = useState(rider?.checklist?.gearVerified || false);
   const [docsSubmitted, setDocsSubmitted] = useState(rider?.checklist?.docsSubmitted || false);
   
-  // Handle save notes
   const handleSaveNotes = () => {
-    // In a real app, this would update the backend
     toast({
       title: "Notes Updated",
       description: "Rider notes have been updated successfully.",
     });
   };
   
-  // Handle checklist update
   const handleChecklistUpdate = () => {
-    // In a real app, this would update the backend
     toast({
       title: "Checklist Updated",
       description: "Rider checklist has been updated successfully.",
@@ -98,9 +90,7 @@ const RiderProfile = () => {
           </span>
         </div>
         
-        {/* Basic Info */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {/* Personal Info */}
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
@@ -126,7 +116,7 @@ const RiderProfile = () => {
                 <div>
                   <p className="text-sm text-muted-foreground">Date of Birth</p>
                   <p className="font-medium flex items-center">
-                    <BirthdayCake className="h-4 w-4 mr-1 text-muted-foreground" />
+                    <Cake className="h-4 w-4 mr-1 text-muted-foreground" />
                     {formatDate(rider.dateOfBirth)} ({calculateAge(rider.dateOfBirth)} years)
                   </p>
                 </div>
@@ -159,7 +149,6 @@ const RiderProfile = () => {
             </CardContent>
           </Card>
           
-          {/* Vehicle Details */}
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
@@ -193,7 +182,6 @@ const RiderProfile = () => {
             </CardContent>
           </Card>
           
-          {/* Ride Stats */}
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
@@ -221,7 +209,6 @@ const RiderProfile = () => {
           </Card>
         </div>
         
-        {/* Tabs for different sections */}
         <Tabs defaultValue="rides">
           <TabsList>
             <TabsTrigger value="rides">Ride History</TabsTrigger>
@@ -229,7 +216,6 @@ const RiderProfile = () => {
             <TabsTrigger value="checklist">Checklist</TabsTrigger>
           </TabsList>
           
-          {/* Rides Tab */}
           <TabsContent value="rides" className="mt-6">
             <Card>
               <CardHeader>
@@ -269,7 +255,6 @@ const RiderProfile = () => {
             </Card>
           </TabsContent>
           
-          {/* Notes Tab */}
           <TabsContent value="notes" className="mt-6">
             <Card>
               <CardHeader>
@@ -290,7 +275,6 @@ const RiderProfile = () => {
             </Card>
           </TabsContent>
           
-          {/* Checklist Tab */}
           <TabsContent value="checklist" className="mt-6">
             <Card>
               <CardHeader>
