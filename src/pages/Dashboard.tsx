@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
 import DashboardLayout from '../components/layout/DashboardLayout';
@@ -96,7 +95,7 @@ const Dashboard = () => {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between">
             <CardTitle>Upcoming Events (Next 7 days)</CardTitle>
-            <BirthdayCake className="h-5 w-5 text-cycling-red" />
+            <Cake className="h-5 w-5 text-cycling-red" />
           </CardHeader>
           <CardContent>
             {upcomingEvents.length > 0 ? (
