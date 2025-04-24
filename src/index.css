@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -32,7 +33,7 @@
     --input: 0 0% 90%;
     --ring: 0 0% 0%;
 
-    --radius: 0.5rem;
+    --radius: 0.75rem;
   }
 }
 
@@ -42,14 +43,50 @@
   }
   body {
     @apply bg-background text-foreground font-sans;
+    font-feature-settings: "rlig" 1, "calt" 1;
   }
 }
 
 /* Custom styles for the cycling admin dashboard */
 .stat-card {
-  @apply bg-white rounded-lg shadow p-4 border border-gray-100;
+  @apply bg-white rounded-xl shadow-md p-4 border-none transition-all duration-300 hover:shadow-lg;
 }
 
 .dashboard-layout {
   @apply flex h-screen bg-gray-50;
+}
+
+/* Custom animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.fade-in {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+/* Improved card styling */
+.card {
+  @apply rounded-xl border-none shadow-md transition-all duration-300 hover:shadow-lg;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
 }

@@ -11,6 +11,7 @@ import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import RiderManagement from "./pages/RiderManagement";
 import RiderProfile from "./pages/RiderProfile";
+import Notifications from "./pages/Notifications";
 import NotFound from "./pages/NotFound";
 import StickerVerification from "./pages/StickerVerification";
 import PublicRiderProfile from "./pages/PublicRiderProfile";
@@ -43,6 +44,7 @@ const App = () => (
             <Route path="/" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
             <Route path="/riders" element={<ProtectedRoute><RiderManagement /></ProtectedRoute>} />
             <Route path="/riders/:id" element={<ProtectedRoute><RiderProfile /></ProtectedRoute>} />
+            <Route path="/notifications" element={<ProtectedRoute><Notifications /></ProtectedRoute>} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>

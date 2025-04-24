@@ -1,117 +1,157 @@
 
-import React, { useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useLocation, useParams } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { mockRiders } from '../data/mockData';
-import { Phone, AlertTriangle, User } from 'lucide-react';
-import { toast } from '../components/ui/use-toast';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
+import { mockRiders } from '@/data/mockData';
+import { toast } from 'sonner';
+import { PhoneOutlined, WarningOutlined, UserOutlined, HeartOutlined } from '@ant-design/icons';
+
+interface EmergencyContact {
+  name: string;
+  relation: string;
+  phone: string;
+}
 
 const PublicRiderProfile = () => {
   const { code } = useParams<{ code: string }>();
-  const navigate = useNavigate();
-  const [showEmergencyContact, setShowEmergencyContact] = useState(false);
+  const location = useLocation();
+  const [rider, setRider] = useState<any | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [emergencyMode, setEmergencyMode] = useState(false);
   
-  // Find rider by sticker code
-  const rider = mockRiders.find(r => r.stickerCode === code);
-  
-  // Handle emergency button click
+  useEffect(() => {
+    // In a real app, we would fetch the rider data based on the sticker code
+    // For demo purposes, we'll use the state passed from StickerVerification
+    const riderId = location.state?.riderId;
+    if (riderId) {
+      const foundRider = mockRiders.find(r => r.id === riderId);
+      if (foundRider) {
+        setRider({
+          ...foundRider,
+          bloodGroup: ['A+', 'B+', 'O+', 'AB+', 'A-', 'B-', 'O-', 'AB-'][Math.floor(Math.random() * 8)],
+          emergencyContact: {
+            name: 'Emergency Contact',
+            relation: 'Family',
+            phone: '+1 (555) 123-4567'
+          }
+        });
+      }
+    }
+    setLoading(false);
+  }, [code, location.state]);
+
   const handleEmergency = () => {
-    setShowEmergencyContact(true);
-    
-    // Simulate sending SMS alert
-    toast({
-      title: "Emergency Alert Sent",
-      description: "An SMS alert has been sent to the club administrators",
-      variant: "destructive",
-    });
+    // In a real app, this would send an alert to the admin
+    toast.success("Emergency alert sent to club administrators");
+    setEmergencyMode(true);
   };
-  
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <p>Loading rider information...</p>
+      </div>
+    );
+  }
+
   if (!rider) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50 p-4">
-        <Card className="w-full max-w-md shadow-lg">
-          <CardHeader>
-            <CardTitle className="flex items-center justify-center">
-              <AlertTriangle className="h-6 w-6 text-red-500 mr-2" />
-              Invalid Sticker Code
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-center">
-              The sticker code provided does not match any registered rider.
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+        <Card className="w-full max-w-md shadow-xl border-none rounded-2xl">
+          <div className="h-2 bg-cycling-red w-full" />
+          <CardContent className="p-8 text-center">
+            <WarningOutlined className="text-4xl text-cycling-red mb-4" />
+            <h2 className="text-2xl font-bold mb-2">Invalid Sticker Code</h2>
+            <p className="text-muted-foreground mb-4">
+              The sticker code provided is not valid or has expired.
             </p>
-          </CardContent>
-          <CardFooter className="flex justify-center">
-            <Button onClick={() => navigate('/sticker')}>
-              Go Back
+            <Button 
+              onClick={() => window.location.href = '/sticker'}
+              className="bg-black hover:bg-gray-800"
+            >
+              Try Again
             </Button>
-          </CardFooter>
+          </CardContent>
         </Card>
       </div>
     );
   }
-  
+
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50 p-4">
-      <Card className="w-full max-w-md shadow-lg">
-        <CardHeader className="text-center">
-          <CardTitle className="text-xl font-bold">Rider Information</CardTitle>
-          <CardDescription>Sticker Code: {code}</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-6">
-          <div className="flex flex-col items-center justify-center">
-            <div className="h-20 w-20 rounded-full bg-cycling-blue flex items-center justify-center text-white text-2xl mb-4">
-              <User size={40} />
-            </div>
-            <h2 className="text-xl font-bold text-center">{rider.fullName}</h2>
-          </div>
-          
-          <div className="space-y-4">
-            <div>
-              <p className="text-sm text-muted-foreground">Blood Group</p>
-              <p className="font-bold text-xl text-center">{rider.bloodGroup}</p>
-            </div>
-            
-            {showEmergencyContact ? (
-              <div className="mt-4 animate-pulse">
-                <p className="text-sm text-muted-foreground">Emergency Contact</p>
-                <a 
-                  href={`tel:${rider.emergencyContact}`}
-                  className="font-medium text-cycling-red hover:underline flex items-center justify-center gap-2"
-                >
-                  <Phone className="h-4 w-4" />
-                  {rider.emergencyContact}
-                </a>
-              </div>
+    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+      <Card className="w-full max-w-md shadow-xl border-none rounded-2xl overflow-hidden">
+        <div className="h-2 bg-cycling-red w-full" />
+        <CardHeader className="text-center pt-8">
+          <div className="mx-auto bg-gray-200 h-24 w-24 rounded-full flex items-center justify-center mb-4">
+            {rider.profileImage ? (
+              <img 
+                src={rider.profileImage} 
+                alt={rider.name} 
+                className="h-full w-full rounded-full object-cover"
+              />
             ) : (
-              <Alert className="bg-gray-100">
-                <AlertTriangle className="h-4 w-4" />
-                <AlertTitle>Emergency Contact</AlertTitle>
-                <AlertDescription>
-                  Press the emergency button below to reveal the emergency contact number and send an alert to club admins.
-                </AlertDescription>
-              </Alert>
+              <UserOutlined className="text-4xl text-gray-500" />
             )}
           </div>
+          <CardTitle className="text-2xl font-bold">{rider.name}</CardTitle>
+          <CardDescription>
+            Cycle Club Member #{rider.id}
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-6">
+          <div className="grid grid-cols-2 gap-4">
+            <div className="bg-gray-100 p-4 rounded-xl">
+              <div className="text-sm text-muted-foreground mb-1">Blood Group</div>
+              <div className="font-semibold flex items-center">
+                <HeartOutlined className="text-cycling-red mr-2" /> {rider.bloodGroup}
+              </div>
+            </div>
+            
+            <div className="bg-gray-100 p-4 rounded-xl">
+              <div className="text-sm text-muted-foreground mb-1">Sticker Code</div>
+              <div className="font-semibold">{code}</div>
+            </div>
+          </div>
+          
+          {emergencyMode && (
+            <div className="bg-red-50 border border-red-200 p-4 rounded-xl">
+              <h3 className="font-semibold text-cycling-red mb-2 flex items-center">
+                <PhoneOutlined className="mr-2" /> Emergency Contact
+              </h3>
+              <div className="space-y-1">
+                <p className="text-sm text-gray-700">
+                  <strong>Name:</strong> {rider.emergencyContact.name}
+                </p>
+                <p className="text-sm text-gray-700">
+                  <strong>Relation:</strong> {rider.emergencyContact.relation}
+                </p>
+                <p className="text-sm font-bold text-black">
+                  <strong>Phone:</strong> {rider.emergencyContact.phone}
+                </p>
+              </div>
+            </div>
+          )}
+          
+          <Button
+            onClick={handleEmergency}
+            className={`w-full py-6 rounded-xl ${
+              emergencyMode 
+                ? 'bg-gray-300 hover:bg-gray-400'
+                : 'bg-cycling-red hover:bg-red-700'
+            } text-white`}
+            disabled={emergencyMode}
+          >
+            {emergencyMode 
+              ? 'Emergency Contact Revealed' 
+              : 'Reveal Emergency Contact'}
+          </Button>
         </CardContent>
-        <CardFooter className="flex flex-col space-y-4">
-          <Button 
-            onClick={handleEmergency} 
-            variant="destructive" 
-            className="w-full"
-            disabled={showEmergencyContact}
-          >
-            {showEmergencyContact ? 'Emergency Alert Sent' : 'Emergency - Send Alert'}
-          </Button>
-          <Button 
-            onClick={() => navigate('/sticker')} 
-            variant="outline" 
-            className="w-full"
-          >
-            Back
-          </Button>
+        <CardFooter className="text-center text-xs text-muted-foreground">
+          <p className="w-full">
+            This is an emergency profile page for Cycle Club members.
+            In case of emergency, press the button above to reveal contact information.
+          </p>
         </CardFooter>
       </Card>
     </div>

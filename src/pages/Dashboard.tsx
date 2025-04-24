@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Link } from 'react-router-dom';
 import DashboardLayout from '../components/layout/DashboardLayout';
@@ -10,7 +11,7 @@ import {
   CheckOutlined, 
   WarningOutlined 
 } from '@ant-design/icons';
-import { Cake } from '@mui/icons-material';
+import { Cake } from 'lucide-react';
 
 const Dashboard = () => {
   // Calculate dashboard stats
@@ -26,11 +27,53 @@ const Dashboard = () => {
   return (
     <DashboardLayout>
       <div className="space-y-6">
-        <h1 className="text-3xl font-bold text-cycling-blue">Dashboard</h1>
+        <h1 className="text-3xl font-bold text-black">Dashboard</h1>
+        
+        {/* Upcoming Birthdays & Anniversaries */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {upcomingEvents.length > 0 ? (
+            upcomingEvents.map((event) => (
+              <Card key={`${event.riderId}-${event.type}`} className="bg-white shadow-md rounded-xl overflow-hidden border-none hover:shadow-lg transition-all">
+                <div className={`h-2 w-full ${event.type === 'birthday' ? 'bg-cycling-red' : 'bg-black'}`}></div>
+                <CardContent className="pt-4">
+                  <div className="flex items-start justify-between">
+                    <div>
+                      <h3 className="font-medium text-lg">
+                        <Link to={`/riders/${event.riderId}`} className="hover:text-cycling-red">
+                          {event.riderName}
+                        </Link>
+                      </h3>
+                      <p className="text-sm text-muted-foreground flex items-center mt-1">
+                        {event.type === 'birthday' ? (
+                          <>
+                            <Cake className="h-4 w-4 mr-1 text-cycling-red" /> Birthday
+                          </>
+                        ) : (
+                          <>
+                            <CalendarOutlined className="h-4 w-4 mr-1" /> Anniversary
+                          </>
+                        )}
+                      </p>
+                    </div>
+                    <div className="bg-gray-100 px-3 py-1.5 rounded-full text-sm font-medium">
+                      {event.date}
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            ))
+          ) : (
+            <Card className="col-span-full bg-white shadow-md rounded-xl overflow-hidden border-none">
+              <CardContent className="py-6">
+                <p className="text-center text-muted-foreground">No upcoming events in the next 7 days</p>
+              </CardContent>
+            </Card>
+          )}
+        </div>
         
         {/* Stats Overview */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          <Card>
+          <Card className="bg-white shadow-md rounded-xl overflow-hidden border-none hover:shadow-lg transition-all">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Total Members</CardTitle>
               <TeamOutlined className="text-muted-foreground text-lg" />
@@ -41,7 +84,7 @@ const Dashboard = () => {
             </CardContent>
           </Card>
           
-          <Card>
+          <Card className="bg-white shadow-md rounded-xl overflow-hidden border-none hover:shadow-lg transition-all">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Total Rides/Events</CardTitle>
               <CalendarOutlined className="text-muted-foreground text-lg" />
@@ -52,7 +95,7 @@ const Dashboard = () => {
             </CardContent>
           </Card>
           
-          <Card>
+          <Card className="bg-white shadow-md rounded-xl overflow-hidden border-none hover:shadow-lg transition-all">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Active Riders</CardTitle>
               <CheckOutlined className="text-green-500 text-lg" />
@@ -63,7 +106,7 @@ const Dashboard = () => {
             </CardContent>
           </Card>
           
-          <Card>
+          <Card className="bg-white shadow-md rounded-xl overflow-hidden border-none hover:shadow-lg transition-all">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Inactive Riders</CardTitle>
               <WarningOutlined className="text-cycling-red text-lg" />
@@ -76,14 +119,14 @@ const Dashboard = () => {
         </div>
         
         {/* Participation Rate */}
-        <Card>
+        <Card className="bg-white shadow-md rounded-xl overflow-hidden border-none">
           <CardHeader>
             <CardTitle>Participation Rate</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="w-full bg-gray-200 rounded-full h-2.5">
               <div 
-                className="bg-cycling-blue h-2.5 rounded-full" 
+                className="bg-black h-2.5 rounded-full" 
                 style={{ width: `${participationRate}%` }}
               ></div>
             </div>
@@ -94,46 +137,9 @@ const Dashboard = () => {
             </div>
           </CardContent>
         </Card>
-
-        {/* Upcoming Birthdays & Anniversaries */}
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between">
-            <CardTitle>Upcoming Events (Next 7 days)</CardTitle>
-            <Cake className="h-5 w-5 text-cycling-red" />
-          </CardHeader>
-          <CardContent>
-            {upcomingEvents.length > 0 ? (
-              <div className="space-y-4">
-                {upcomingEvents.map((event) => (
-                  <div 
-                    key={`${event.riderId}-${event.type}`}
-                    className="flex items-center justify-between border-b pb-2"
-                  >
-                    <div>
-                      <Link 
-                        to={`/riders/${event.riderId}`}
-                        className="font-medium hover:underline"
-                      >
-                        {event.riderName}
-                      </Link>
-                      <p className="text-sm text-muted-foreground">
-                        {event.type === 'birthday' ? 'Birthday' : 'Anniversary'}
-                      </p>
-                    </div>
-                    <div className="text-sm font-semibold">
-                      {event.date}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <p className="text-center py-4 text-muted-foreground">No upcoming events in the next 7 days</p>
-            )}
-          </CardContent>
-        </Card>
         
         {/* Recent Activity - can be expanded in future versions */}
-        <Card>
+        <Card className="bg-white shadow-md rounded-xl overflow-hidden border-none">
           <CardHeader>
             <CardTitle>Recent Activity</CardTitle>
           </CardHeader>
