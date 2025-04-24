@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
@@ -41,26 +40,26 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
   ];
 
   return (
-    <div className="flex h-screen bg-gray-50 overflow-hidden">
+    <div className="flex h-screen bg-white overflow-hidden">
       {/* Sidebar - Desktop */}
       <aside
         className={cn(
-          "bg-black text-white transition-all duration-300 ease-in-out hidden md:block",
+          "bg-white text-black transition-all duration-300 ease-in-out hidden md:block border-r",
           collapsed ? "w-20" : "w-64"
         )}
       >
         <div className="h-full flex flex-col">
           {/* Logo section */}
-          <div className="flex items-center justify-between h-16 px-4 border-b border-gray-800">
+          <div className="flex items-center justify-between h-16 px-4 border-b">
             {!collapsed && (
-              <h1 className="text-white font-bold text-lg truncate">
+              <h1 className="text-black font-bold text-lg truncate">
                 Cycle Club
               </h1>
             )}
             <Button
               variant="ghost"
               size="icon"
-              className="text-white hover:bg-gray-800"
+              className="text-black hover:bg-gray-100"
               onClick={() => setCollapsed(!collapsed)}
             >
               {collapsed ? <RightOutlined /> : <LeftOutlined />}
@@ -77,10 +76,10 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
                     <Link
                       to={item.path}
                       className={cn(
-                        "flex items-center px-4 py-3 text-white rounded-md transition-colors",
+                        "flex items-center px-4 py-3 rounded-md transition-colors",
                         location.pathname === item.path 
-                          ? "bg-cycling-red" 
-                          : "hover:bg-gray-800"
+                          ? "bg-black text-white" 
+                          : "hover:bg-gray-100 text-black"
                       )}
                     >
                       <Icon className={cn("h-5 w-5", collapsed ? "mx-auto" : "mr-3")} />
@@ -93,17 +92,17 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
           </nav>
 
           {/* User section */}
-          <div className="p-4 border-t border-gray-800">
+          <div className="p-4 border-t">
             <div className="flex items-center">
-              <div className="h-8 w-8 rounded-full bg-gray-700 text-white flex items-center justify-center">
+              <div className="h-8 w-8 rounded-full bg-gray-200 text-black flex items-center justify-center">
                 {user?.name?.charAt(0) || 'A'}
               </div>
               {!collapsed && (
                 <div className="ml-3 overflow-hidden">
-                  <p className="text-sm font-medium text-white truncate">
+                  <p className="text-sm font-medium text-black truncate">
                     {user?.name || 'Admin User'}
                   </p>
-                  <p className="text-xs text-gray-400 truncate">
+                  <p className="text-xs text-gray-600 truncate">
                     {user?.email || 'admin@example.com'}
                   </p>
                 </div>
@@ -114,7 +113,7 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
               variant="ghost"
               size={collapsed ? "icon" : "default"}
               className={cn(
-                "mt-4 text-white hover:bg-gray-800 w-full justify-start",
+                "mt-4 text-black hover:bg-gray-100 w-full justify-start",
                 collapsed && "justify-center"
               )}
               onClick={handleLogout}
@@ -173,7 +172,7 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
                         className={cn(
                           "flex items-center px-4 py-3 text-white rounded-md transition-colors",
                           location.pathname === item.path 
-                            ? "bg-cycling-red" 
+                            ? "bg-black text-white" 
                             : "hover:bg-gray-800"
                         )}
                         onClick={() => setMobileMenuOpen(false)}

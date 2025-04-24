@@ -1,4 +1,3 @@
-
 import type { Config } from "tailwindcss";
 
 export default {
@@ -23,45 +22,32 @@ export default {
         sans: ['Roboto', 'sans-serif'],
       },
       colors: {
-        border: 'hsl(var(--border))',
-        input: 'hsl(var(--input))',
-        ring: 'hsl(var(--ring))',
-        background: 'hsl(var(--background))',
-        foreground: 'hsl(var(--foreground))',
+        border: 'hsl(0 0% 90%)',
+        input: 'hsl(0 0% 90%)',
+        ring: 'hsl(0 0% 0%)',
+        background: 'hsl(0 0% 100%)',
+        foreground: 'hsl(0 0% 0%)',
         primary: {
-          DEFAULT: '#000000',
-          foreground: '#FFFFFF',
-        },
-        secondary: {
           DEFAULT: '#FFFFFF',
           foreground: '#000000',
         },
-        destructive: {
-          DEFAULT: '#ea384c',
-          foreground: '#FFFFFF',
+        secondary: {
+          DEFAULT: '#F5F5F5',
+          foreground: '#000000',
         },
         muted: {
           DEFAULT: '#F5F5F5',
           foreground: '#666666',
         },
         accent: {
-          DEFAULT: '#ea384c',
+          DEFAULT: '#000000',
           foreground: '#FFFFFF',
         },
-        popover: {
-          DEFAULT: '#FFFFFF',
-          foreground: '#000000',
-        },
-        card: {
-          DEFAULT: '#FFFFFF',
-          foreground: '#000000',
-        },
         cycling: {
-          red: '#ea384c',
-          blue: '#000000',
-          lightBlue: '#666666',
-          lightestBlue: '#F5F5F5',
-          offWhite: '#FFFFFF',
+          white: '#FFFFFF',
+          black: '#000000',
+          lightBlack: '#666666',
+          offWhite: '#F5F5F5'
         }
       },
       borderRadius: {
