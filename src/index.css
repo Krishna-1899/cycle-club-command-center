@@ -1,4 +1,3 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -6,43 +5,34 @@
 @layer base {
   :root {
     --background: 0 0% 100%;
-    --foreground: 215 25% 27%;
-
+    --foreground: 0 0% 0%;
+    
     --card: 0 0% 100%;
-    --card-foreground: 215 25% 27%;
-
+    --card-foreground: 0 0% 0%;
+    
     --popover: 0 0% 100%;
-    --popover-foreground: 215 25% 27%;
+    --popover-foreground: 0 0% 0%;
+    
+    --primary: 0 0% 0%;
+    --primary-foreground: 0 0% 100%;
+    
+    --secondary: 0 0% 100%;
+    --secondary-foreground: 0 0% 0%;
+    
+    --muted: 0 0% 96%;
+    --muted-foreground: 0 0% 40%;
+    
+    --accent: 0 84% 57%;
+    --accent-foreground: 0 0% 100%;
+    
+    --destructive: 0 84% 57%;
+    --destructive-foreground: 0 0% 100%;
 
-    --primary: 201 56% 27%;
-    --primary-foreground: 0 0% 98%;
-
-    --secondary: 197 37% 76%;
-    --secondary-foreground: 215 25% 27%;
-
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215 16% 47%;
-
-    --accent: 197 37% 76%;
-    --accent-foreground: 215 25% 27%;
-
-    --destructive: 0 84% 60%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 201 56% 27%;
+    --border: 0 0% 90%;
+    --input: 0 0% 90%;
+    --ring: 0 0% 0%;
 
     --radius: 0.5rem;
-
-    --sidebar-background: 215 33% 23%;
-    --sidebar-foreground: 0 0% 100%;
-    --sidebar-primary: 197 37% 76%;
-    --sidebar-primary-foreground: 215 25% 27%;
-    --sidebar-accent: 215 25% 16%;
-    --sidebar-accent-foreground: 0 0% 100%;
-    --sidebar-border: 215 28% 17%;
-    --sidebar-ring: 197 37% 76%;
   }
 }
 
@@ -50,17 +40,16 @@
   * {
     @apply border-border;
   }
-
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-sans;
   }
+}
 
-  /* Custom styles for the cycling admin dashboard */
-  .stat-card {
-    @apply bg-white rounded-lg shadow p-4 border border-gray-100;
-  }
+/* Custom styles for the cycling admin dashboard */
+.stat-card {
+  @apply bg-white rounded-lg shadow p-4 border border-gray-100;
+}
 
-  .dashboard-layout {
-    @apply flex h-screen bg-gray-50;
-  }
+.dashboard-layout {
+  @apply flex h-screen bg-gray-50;
 }

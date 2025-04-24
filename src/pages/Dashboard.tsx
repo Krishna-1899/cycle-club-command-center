@@ -4,9 +4,13 @@ import DashboardLayout from '../components/layout/DashboardLayout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { mockRiders, mockRides, getUpcomingEvents } from '../data/mockData';
 
-import {
-  Users, Calendar, Check, AlertTriangle, Cake
-} from 'lucide-react';
+import { 
+  TeamOutlined, 
+  CalendarOutlined, 
+  CheckOutlined, 
+  WarningOutlined 
+} from '@ant-design/icons';
+import { Cake } from '@mui/icons-material';
 
 const Dashboard = () => {
   // Calculate dashboard stats
@@ -29,7 +33,7 @@ const Dashboard = () => {
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Total Members</CardTitle>
-              <Users className="h-4 w-4 text-muted-foreground" />
+              <TeamOutlined className="text-muted-foreground text-lg" />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">{totalMembers}</div>
@@ -40,7 +44,7 @@ const Dashboard = () => {
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Total Rides/Events</CardTitle>
-              <Calendar className="h-4 w-4 text-muted-foreground" />
+              <CalendarOutlined className="text-muted-foreground text-lg" />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">{totalRides}</div>
@@ -51,7 +55,7 @@ const Dashboard = () => {
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Active Riders</CardTitle>
-              <Check className="h-4 w-4 text-green-500" />
+              <CheckOutlined className="text-green-500 text-lg" />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">{activeRiders}</div>
@@ -62,7 +66,7 @@ const Dashboard = () => {
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Inactive Riders</CardTitle>
-              <AlertTriangle className="h-4 w-4 text-cycling-red" />
+              <WarningOutlined className="text-cycling-red text-lg" />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">{inactiveRiders}</div>
