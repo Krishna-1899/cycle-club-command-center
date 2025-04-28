@@ -1,25 +1,39 @@
 
 import React, { useState, FormEvent } from 'react';
 import { Navigate } from 'react-router-dom';
-import { useAuth } from '../contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { useAppDispatch, useAppSelector } from '../redux/hooks';
+import { loginUser } from '../redux/slices/authSlice';
+import { toast } from '@/components/ui/use-toast';
+import { AlertCircle } from 'lucide-react';
 
 const Login = () => {
-  const { isAuthenticated, login, isLoading } = useAuth();
+  const dispatch = useAppDispatch();
+  const { isAuthenticated, isLoading, error } = useAppSelector((state) => state.auth);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+    
+    // Dispatch login action
+    const resultAction = await dispatch(loginUser({ email, password }));
+    
+    if (loginUser.fulfilled.match(resultAction)) {
+      toast({
+        title: "Login Successful",
+        description: "Welcome to Cycle Club Command Center!",
+        duration: 3000,
+      });
+    }
+  };
 
   if (isAuthenticated) {
     return <Navigate to="/" replace />;
   }
-
-  const handleSubmit = async (e: FormEvent) => {
-    e.preventDefault();
-    await login(email, password);
-  };
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-50">
@@ -31,6 +45,12 @@ const Login = () => {
           </CardHeader>
           <form onSubmit={handleSubmit}>
             <CardContent className="space-y-4">
+              {error && (
+                <div className="p-3 bg-red-50 border border-red-200 rounded-md flex items-center text-sm text-red-600">
+                  <AlertCircle className="h-4 w-4 mr-2" />
+                  <span>{error}</span>
+                </div>
+              )}
               <div className="space-y-2">
                 <Label htmlFor="email">Email</Label>
                 <Input
