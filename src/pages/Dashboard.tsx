@@ -13,7 +13,7 @@ import {
   CheckOutlined,
   WarningOutlined
 } from '@ant-design/icons';
-import { Cake, Calendar } from 'lucide-react';
+import ClubStats from '@/components/dashboard/ClubStats';
 
 const participationData = [
   { month: 'Jan', participation: 35 },
@@ -65,7 +65,8 @@ const Dashboard = () => {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+          <ClubStats />
           <Card className="bg-white shadow-md rounded-xl border-none hover:shadow-lg transition-all">
             <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="text-sm font-medium">Total Members</CardTitle>
