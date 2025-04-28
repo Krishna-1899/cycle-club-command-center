@@ -9,7 +9,7 @@ import { useState, useEffect } from "react";
 // Pages
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
-import Clubs from "./pages/Clubs"; // Import the Clubs component
+import Clubs from "./pages/Clubs";
 import RiderManagement from "./pages/RiderManagement";
 import RiderProfile from "./pages/RiderProfile";
 import Notifications from "./pages/Notifications";
