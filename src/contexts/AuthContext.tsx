@@ -1,22 +1,24 @@
 
-import React, { createContext, useState, useContext, useEffect } from 'react';
-import { toast } from '../components/ui/use-toast';
+import React, { createContext, useContext, useState, useEffect } from 'react';
+import { message } from 'antd';
 
-interface User {
+type User = {
   id: string;
-  email: string;
   name: string;
-}
+  email: string;
+  avatar?: string;
+  role: string;
+};
 
-interface AuthContextType {
+type AuthContextType = {
   user: User | null;
   isAuthenticated: boolean;
   isLoading: boolean;
-  login: (email: string, password: string) => Promise<boolean>;
+  login: (email: string, password: string) => Promise<void>;
   logout: () => void;
-}
+};
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
+const AuthContext = createContext<AuthContextType | null>(null);
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
@@ -28,65 +30,46 @@ export const useAuth = () => {
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   
+  // Check for existing session on mount
   useEffect(() => {
-    // Check for stored user on initial load
-    const storedUser = localStorage.getItem('cycle_club_user');
+    const storedUser = localStorage.getItem('user');
     if (storedUser) {
       try {
         setUser(JSON.parse(storedUser));
       } catch (error) {
-        console.error('Failed to parse stored user', error);
-        localStorage.removeItem('cycle_club_user');
+        console.error('Failed to parse stored user data', error);
+        localStorage.removeItem('user');
       }
     }
-    setIsLoading(false);
   }, []);
 
-  const login = async (email: string, password: string): Promise<boolean> => {
+  const login = async (email: string, password: string) => {
     setIsLoading(true);
-    
     try {
-      // For demo purposes - in a real app, this would be an API call
-      // Simulate API delay
+      // Mock API call
       await new Promise(resolve => setTimeout(resolve, 1000));
       
-      // Mock login logic - in a real app, validate with a backend
+      // This is just for demo purposes. In a real app, this would come from your API
       if (email === 'admin@example.com' && password === 'password123') {
-        const userData: User = {
+        const user = {
           id: '1',
-          email: email,
-          name: 'Admin User'
+          name: 'Admin User',
+          email,
+          role: 'admin',
+          avatar: 'https://randomuser.me/api/portraits/men/32.jpg',
         };
-        setUser(userData);
-        localStorage.setItem('cycle_club_user', JSON.stringify(userData));
         
-        toast({
-          title: "Login Successful",
-          description: "Welcome to Cycle Club Command Center!",
-          duration: 3000,
-        });
-        
-        return true;
+        setUser(user);
+        localStorage.setItem('user', JSON.stringify(user));
+        message.success('Login successful!');
       } else {
-        toast({
-          title: "Login Failed",
-          description: "Invalid email or password",
-          variant: "destructive",
-          duration: 3000,
-        });
-        return false;
+        throw new Error('Invalid email or password');
       }
     } catch (error) {
-      console.error('Login error', error);
-      toast({
-        title: "Login Error",
-        description: "An error occurred during login. Please try again.",
-        variant: "destructive",
-        duration: 3000,
-      });
-      return false;
+      message.error('Login failed: ' + (error as Error).message);
+      throw error;
     } finally {
       setIsLoading(false);
     }
@@ -94,12 +77,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const logout = () => {
     setUser(null);
-    localStorage.removeItem('cycle_club_user');
-    toast({
-      title: "Logged Out",
-      description: "You have been successfully logged out",
-      duration: 3000,
-    });
+    localStorage.removeItem('user');
+    message.info('You have been logged out');
   };
 
   const value = {
@@ -107,8 +86,12 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     isAuthenticated: !!user,
     isLoading,
     login,
-    logout
+    logout,
   };
 
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider value={value}>
+      {children}
+    </AuthContext.Provider>
+  );
 };

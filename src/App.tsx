@@ -1,9 +1,7 @@
 
-import { Toaster } from "@/components/ui/toaster";
-import { Toaster as Sonner } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
+import { ConfigProvider } from "antd";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./contexts/AuthContext";
 
 // Pages
@@ -22,9 +20,16 @@ const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
+    <ConfigProvider
+      theme={{
+        token: {
+          colorPrimary: "#000000",
+          colorError: "#D32F2F",
+          colorSuccess: "#4CAF50",
+          borderRadius: 8,
+        },
+      }}
+    >
       <AuthProvider>
         <BrowserRouter>
           <Routes>
@@ -40,7 +45,7 @@ const App = () => (
           </Routes>
         </BrowserRouter>
       </AuthProvider>
-    </TooltipProvider>
+    </ConfigProvider>
   </QueryClientProvider>
 );
 

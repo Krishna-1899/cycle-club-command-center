@@ -1,11 +1,12 @@
 
 import React, { useState, useEffect } from 'react';
 import { useLocation, useParams } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
+import { Card, Button, Typography, Spin, Avatar, Space, Descriptions, Divider, Tag } from 'antd';
+import { PhoneOutlined, WarningOutlined, UserOutlined, HeartOutlined } from '@ant-design/icons';
 import { mockRiders } from '@/data/mockData';
 import { toast } from 'sonner';
-import { PhoneOutlined, WarningOutlined, UserOutlined, HeartOutlined } from '@ant-design/icons';
+
+const { Title, Text } = Typography;
 
 interface EmergencyContact {
   name: string;
@@ -50,7 +51,7 @@ const PublicRiderProfile = () => {
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <p>Loading rider information...</p>
+        <Spin size="large" />
       </div>
     );
   }
@@ -60,19 +61,19 @@ const PublicRiderProfile = () => {
       <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
         <Card className="w-full max-w-md shadow-xl border-none rounded-2xl">
           <div className="h-2 bg-cycling-red w-full" />
-          <CardContent className="p-8 text-center">
+          <div className="p-8 text-center">
             <WarningOutlined className="text-4xl text-cycling-red mb-4" />
-            <h2 className="text-2xl font-bold mb-2">Invalid Sticker Code</h2>
-            <p className="text-muted-foreground mb-4">
+            <Title level={2}>Invalid Sticker Code</Title>
+            <Text type="secondary" className="block mb-4">
               The sticker code provided is not valid or has expired.
-            </p>
+            </Text>
             <Button 
+              type="primary"
               onClick={() => window.location.href = '/sticker'}
-              className="bg-black hover:bg-gray-800"
             >
               Try Again
             </Button>
-          </CardContent>
+          </div>
         </Card>
       </div>
     );
@@ -82,77 +83,71 @@ const PublicRiderProfile = () => {
     <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
       <Card className="w-full max-w-md shadow-xl border-none rounded-2xl overflow-hidden">
         <div className="h-2 bg-cycling-red w-full" />
-        <CardHeader className="text-center pt-8">
-          <div className="mx-auto bg-gray-200 h-24 w-24 rounded-full flex items-center justify-center mb-4">
-            {rider.profileImage ? (
-              <img 
-                src={rider.profileImage} 
-                alt={rider.name} 
-                className="h-full w-full rounded-full object-cover"
-              />
-            ) : (
-              <UserOutlined className="text-4xl text-gray-500" />
-            )}
-          </div>
-          <CardTitle className="text-2xl font-bold">{rider.name}</CardTitle>
-          <CardDescription>
-            Cycle Club Member #{rider.id}
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-6">
+        <div className="text-center pt-8">
+          <Avatar 
+            size={96} 
+            src={rider.profileImage}
+            icon={!rider.profileImage && <UserOutlined />} 
+            className="mb-4"
+          />
+          <Title level={2}>{rider.name}</Title>
+          <Text type="secondary">Cycle Club Member #{rider.id}</Text>
+        </div>
+        
+        <Divider />
+        
+        <Space direction="vertical" size="large" className="w-full">
           <div className="grid grid-cols-2 gap-4">
-            <div className="bg-gray-100 p-4 rounded-xl">
-              <div className="text-sm text-muted-foreground mb-1">Blood Group</div>
-              <div className="font-semibold flex items-center">
-                <HeartOutlined className="text-cycling-red mr-2" /> {rider.bloodGroup}
-              </div>
-            </div>
+            <Card className="bg-gray-100">
+              <Space>
+                <HeartOutlined className="text-cycling-red" />
+                <Text strong>Blood Group</Text>
+              </Space>
+              <div className="text-lg font-bold mt-1">{rider.bloodGroup}</div>
+            </Card>
             
-            <div className="bg-gray-100 p-4 rounded-xl">
-              <div className="text-sm text-muted-foreground mb-1">Sticker Code</div>
-              <div className="font-semibold">{code}</div>
-            </div>
+            <Card className="bg-gray-100">
+              <Text type="secondary">Sticker Code</Text>
+              <div className="text-lg font-bold mt-1">{code}</div>
+            </Card>
           </div>
           
           {emergencyMode && (
-            <div className="bg-red-50 border border-red-200 p-4 rounded-xl">
-              <h3 className="font-semibold text-cycling-red mb-2 flex items-center">
+            <Card className="bg-red-50 border border-red-200">
+              <Title level={5} className="text-cycling-red flex items-center">
                 <PhoneOutlined className="mr-2" /> Emergency Contact
-              </h3>
-              <div className="space-y-1">
-                <p className="text-sm text-gray-700">
-                  <strong>Name:</strong> {rider.emergencyContact.name}
-                </p>
-                <p className="text-sm text-gray-700">
-                  <strong>Relation:</strong> {rider.emergencyContact.relation}
-                </p>
-                <p className="text-sm font-bold text-black">
-                  <strong>Phone:</strong> {rider.emergencyContact.phone}
-                </p>
-              </div>
-            </div>
+              </Title>
+              <Descriptions column={1}>
+                <Descriptions.Item label="Name">{rider.emergencyContact.name}</Descriptions.Item>
+                <Descriptions.Item label="Relation">{rider.emergencyContact.relation}</Descriptions.Item>
+                <Descriptions.Item label="Phone">
+                  <Text strong>{rider.emergencyContact.phone}</Text>
+                </Descriptions.Item>
+              </Descriptions>
+            </Card>
           )}
           
           <Button
+            type={emergencyMode ? "default" : "primary"}
+            danger={!emergencyMode}
+            size="large"
             onClick={handleEmergency}
-            className={`w-full py-6 rounded-xl ${
-              emergencyMode 
-                ? 'bg-gray-300 hover:bg-gray-400'
-                : 'bg-cycling-red hover:bg-red-700'
-            } text-white`}
             disabled={emergencyMode}
+            block
+            className="py-6 rounded-xl"
           >
             {emergencyMode 
               ? 'Emergency Contact Revealed' 
               : 'Reveal Emergency Contact'}
           </Button>
-        </CardContent>
-        <CardFooter className="text-center text-xs text-muted-foreground">
-          <p className="w-full">
+        </Space>
+        
+        <div className="mt-6 text-center text-xs text-gray-500">
+          <p>
             This is an emergency profile page for Cycle Club members.
             In case of emergency, press the button above to reveal contact information.
           </p>
-        </CardFooter>
+        </div>
       </Card>
     </div>
   );

@@ -1,225 +1,121 @@
+
 import React, { useState } from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { useAuth } from '../../contexts/AuthContext';
-import { 
-  UserOutlined, HomeOutlined, BellOutlined, LogoutOutlined,
-  MenuOutlined, CloseOutlined, RightOutlined, LeftOutlined,
-  TeamOutlined
+import { Layout, Menu, Avatar, Dropdown, Badge, Button } from 'antd';
+import { Link, useLocation } from 'react-router-dom';
+import {
+  DashboardOutlined,
+  TeamOutlined,
+  BellOutlined,
+  UserOutlined,
+  MenuFoldOutlined,
+  MenuUnfoldOutlined,
+  LogoutOutlined,
+  SettingOutlined
 } from '@ant-design/icons';
-import { Button } from '../ui/button';
-import { cn } from '@/lib/utils';
-import { 
-  DropdownMenu, 
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger
-} from '@/components/ui/dropdown-menu';
-import { Avatar } from '@/components/ui/avatar';
+import { useAuth } from '../../contexts/AuthContext';
+
+const { Header, Sider, Content } = Layout;
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
 }
 
 const DashboardLayout = ({ children }: DashboardLayoutProps) => {
-  const { user, logout } = useAuth();
-  const navigate = useNavigate();
-  const location = useLocation();
   const [collapsed, setCollapsed] = useState(false);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { user, logout } = useAuth();
+  const location = useLocation();
 
-  const handleLogout = () => {
-    logout();
-    navigate('/login');
+  const toggleSidebar = () => {
+    setCollapsed(!collapsed);
   };
 
-  const navItems = [
-    { name: 'Dashboard', path: '/', icon: HomeOutlined },
-    { name: 'Clubs', path: '/clubs', icon: TeamOutlined },
-    { name: 'Riders', path: '/riders', icon: UserOutlined },
-    { name: 'Notifications', path: '/notifications', icon: BellOutlined },
+  const menuItems = [
+    {
+      key: '/',
+      icon: <DashboardOutlined />,
+      label: <Link to="/">Dashboard</Link>,
+    },
+    {
+      key: '/clubs',
+      icon: <TeamOutlined />,
+      label: <Link to="/clubs">Clubs</Link>,
+    },
+    {
+      key: '/riders',
+      icon: <TeamOutlined />,
+      label: <Link to="/riders">Riders</Link>,
+    },
+    {
+      key: '/notifications',
+      icon: <BellOutlined />,
+      label: <Link to="/notifications">Notifications</Link>,
+    },
+  ];
+
+  const userMenuItems = [
+    {
+      key: 'profile',
+      icon: <UserOutlined />,
+      label: 'Profile',
+    },
+    {
+      key: 'settings',
+      icon: <SettingOutlined />,
+      label: 'Settings',
+    },
+    {
+      key: 'logout',
+      icon: <LogoutOutlined />,
+      label: 'Logout',
+      onClick: logout,
+    },
   ];
 
   return (
-    <div className="flex h-screen bg-white overflow-hidden">
-      {/* Sidebar - Desktop */}
-      <aside
-        className={cn(
-          "bg-white text-black transition-all duration-300 ease-in-out hidden md:block border-r",
-          collapsed ? "w-20" : "w-64"
-        )}
+    <Layout className="h-screen">
+      <Sider 
+        trigger={null} 
+        collapsible 
+        collapsed={collapsed}
+        width={240}
+        className="shadow-lg"
       >
-        <div className="h-full flex flex-col">
-          {/* Logo section */}
-          <div className="flex items-center justify-between h-16 px-4 border-b">
-            {!collapsed && (
-              <h1 className="text-black font-bold text-lg truncate">
-                Cycle Club
-              </h1>
-            )}
-            <Button
-              variant="ghost"
-              size="icon"
-              className="text-black hover:bg-gray-100"
-              onClick={() => setCollapsed(!collapsed)}
-            >
-              {collapsed ? <RightOutlined /> : <LeftOutlined />}
-            </Button>
-          </div>
-
-          {/* Navigation */}
-          <nav className="flex-1 overflow-y-auto pt-5 px-2">
-            <ul className="space-y-2">
-              {navItems.map((item) => {
-                const Icon = item.icon;
-                return (
-                  <li key={item.path}>
-                    <Link
-                      to={item.path}
-                      className={cn(
-                        "flex items-center px-4 py-3 rounded-md transition-colors",
-                        location.pathname === item.path 
-                          ? "bg-black text-white" 
-                          : "hover:bg-gray-100 text-black"
-                      )}
-                    >
-                      <Icon className={cn("h-5 w-5", collapsed ? "mx-auto" : "mr-3")} />
-                      {!collapsed && <span>{item.name}</span>}
-                    </Link>
-                  </li>
-                );
-              })}
-            </ul>
-          </nav>
-
-          {/* User section */}
-          <div className="p-4 border-t">
-            <div className="flex items-center">
-              <div className="h-8 w-8 rounded-full bg-gray-200 text-black flex items-center justify-center">
-                {user?.name?.charAt(0) || 'A'}
+        <div className="p-4 flex items-center justify-center">
+          <h1 className="text-white font-bold text-xl">
+            {collapsed ? 'CC' : 'Cycle Club'}
+          </h1>
+        </div>
+        <Menu
+          theme="light"
+          mode="inline"
+          selectedKeys={[location.pathname]}
+          items={menuItems}
+        />
+      </Sider>
+      <Layout>
+        <Header className="bg-white flex justify-between items-center px-4 shadow-sm">
+          <Button
+            type="text"
+            icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+            onClick={toggleSidebar}
+          />
+          <div className="flex items-center gap-4">
+            <Badge count={5} size="small">
+              <Link to="/notifications">
+                <BellOutlined className="text-xl" />
+              </Link>
+            </Badge>
+            <Dropdown menu={{ items: userMenuItems }}>
+              <div className="flex items-center cursor-pointer">
+                <Avatar icon={<UserOutlined />} src={user?.avatar} />
+                <span className="ml-2 hidden md:block">{user?.name || 'Admin User'}</span>
               </div>
-              {!collapsed && (
-                <div className="ml-3 overflow-hidden">
-                  <p className="text-sm font-medium text-black truncate">
-                    {user?.name || 'Admin User'}
-                  </p>
-                  <p className="text-xs text-gray-600 truncate">
-                    {user?.email || 'admin@example.com'}
-                  </p>
-                </div>
-              )}
-            </div>
-
-            <Button
-              variant="ghost"
-              size={collapsed ? "icon" : "default"}
-              className={cn(
-                "mt-4 text-black hover:bg-gray-100 w-full justify-start",
-                collapsed && "justify-center"
-              )}
-              onClick={handleLogout}
-            >
-              <LogoutOutlined className={cn("h-5 w-5", collapsed ? "" : "mr-2")} />
-              {!collapsed && <span>Logout</span>}
-            </Button>
+            </Dropdown>
           </div>
-        </div>
-      </aside>
-
-      {/* Mobile header */}
-      <div className="md:hidden fixed top-0 left-0 right-0 h-16 bg-black text-white z-50 flex items-center justify-between px-4">
-        <Button
-          variant="ghost"
-          size="icon"
-          className="text-white hover:bg-gray-800"
-          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-        >
-          {mobileMenuOpen ? <CloseOutlined /> : <MenuOutlined />}
-        </Button>
-        <h1 className="text-white font-bold text-lg">Cycle Club</h1>
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="icon" className="rounded-full">
-              <Avatar className="h-8 w-8 bg-gray-700">
-                <span className="text-white text-xs">{user?.name?.charAt(0) || 'A'}</span>
-              </Avatar>
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-56 bg-white">
-            <DropdownMenuLabel>My Account</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={() => navigate('/profile')}>
-              Profile
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={handleLogout}>
-              Logout
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </div>
-
-      {/* Mobile sidebar - slide in */}
-      {mobileMenuOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden" onClick={() => setMobileMenuOpen(false)}>
-          <aside className="h-full w-64 bg-black text-white transform transition-transform duration-300 ease-in-out" onClick={(e) => e.stopPropagation()}>
-            <nav className="flex-1 overflow-y-auto pt-20 px-2">
-              <ul className="space-y-2">
-                {navItems.map((item) => {
-                  const Icon = item.icon;
-                  return (
-                    <li key={item.path}>
-                      <Link
-                        to={item.path}
-                        className={cn(
-                          "flex items-center px-4 py-3 text-white rounded-md transition-colors",
-                          location.pathname === item.path 
-                            ? "bg-black text-white" 
-                            : "hover:bg-gray-800"
-                        )}
-                        onClick={() => setMobileMenuOpen(false)}
-                      >
-                        <Icon className="h-5 w-5 mr-3" />
-                        <span>{item.name}</span>
-                      </Link>
-                    </li>
-                  );
-                })}
-              </ul>
-            </nav>
-          </aside>
-        </div>
-      )}
-
-      {/* Main content */}
-      <div className="flex-1 overflow-auto">
-        {/* Desktop header */}
-        <header className="hidden md:flex items-center justify-end h-16 bg-white border-b border-gray-200 px-6">
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="sm" className="rounded-full">
-                <Avatar className="h-8 w-8 bg-gray-700">
-                  <span className="text-white text-xs">{user?.name?.charAt(0) || 'A'}</span>
-                </Avatar>
-                <span className="ml-2">{user?.name || 'Admin User'}</span>
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-56 bg-white">
-              <DropdownMenuLabel>My Account</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={() => navigate('/profile')}>
-                Profile
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={handleLogout}>
-                Logout
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </header>
-        
-        <main className="p-6 pt-20 md:pt-6">{children}</main>
-      </div>
-    </div>
+        </Header>
+        <Content className="p-6 overflow-auto bg-gray-50">{children}</Content>
+      </Layout>
+    </Layout>
   );
 };
 

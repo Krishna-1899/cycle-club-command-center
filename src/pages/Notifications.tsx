@@ -1,10 +1,29 @@
 
 import React, { useState } from 'react';
 import DashboardLayout from '../components/layout/DashboardLayout';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Button } from '@/components/ui/button';
-import { BellOutlined, DeleteOutlined, CheckOutlined } from '@ant-design/icons';
+import { 
+  Card, 
+  Tabs, 
+  Button, 
+  List, 
+  Typography, 
+  Badge, 
+  Avatar, 
+  Space,
+  Popconfirm,
+  message 
+} from 'antd';
+import { 
+  BellOutlined, 
+  DeleteOutlined, 
+  CheckOutlined,
+  WarningOutlined,
+  UserOutlined,
+  CalendarOutlined,
+  ExclamationCircleOutlined 
+} from '@ant-design/icons';
+
+const { Text, Title } = Typography;
 
 // Mock notification data
 const mockNotifications = [
@@ -66,18 +85,22 @@ const Notifications = () => {
     setNotifications(notifications.map(n => 
       n.id === id ? { ...n, read: true } : n
     ));
+    message.success('Notification marked as read');
   };
   
   const markAllAsRead = () => {
     setNotifications(notifications.map(n => ({ ...n, read: true })));
+    message.success('All notifications marked as read');
   };
   
   const deleteNotification = (id: number) => {
     setNotifications(notifications.filter(n => n.id !== id));
+    message.success('Notification deleted');
   };
   
   const clearAll = () => {
     setNotifications([]);
+    message.success('All notifications cleared');
   };
   
   const formatDate = (dateString: string) => {
@@ -89,126 +112,133 @@ const Notifications = () => {
       minute: '2-digit' 
     });
   };
+
+  const getNotificationIcon = (type: string) => {
+    switch (type) {
+      case 'system':
+        return <BellOutlined style={{ color: '#1890ff' }} />;
+      case 'rider':
+        return <UserOutlined style={{ color: '#52c41a' }} />;
+      case 'event':
+        return <CalendarOutlined style={{ color: '#722ed1' }} />;
+      case 'emergency':
+        return <ExclamationCircleOutlined style={{ color: '#f5222d' }} />;
+      default:
+        return <BellOutlined />;
+    }
+  };
   
   return (
     <DashboardLayout>
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-          <h1 className="text-3xl font-bold text-black">Notifications</h1>
+          <Title level={2}>Notifications</Title>
           
           <div className="flex gap-2">
             {unreadCount > 0 && (
-              <Button variant="outline" onClick={markAllAsRead}>
+              <Button onClick={markAllAsRead}>
                 Mark all as read
               </Button>
             )}
-            <Button variant="destructive" onClick={clearAll} disabled={notifications.length === 0}>
-              Clear All
-            </Button>
+            <Popconfirm
+              title="Clear all notifications"
+              description="Are you sure you want to clear all notifications?"
+              onConfirm={clearAll}
+              okText="Yes"
+              cancelText="No"
+              disabled={notifications.length === 0}
+            >
+              <Button danger disabled={notifications.length === 0}>
+                Clear All
+              </Button>
+            </Popconfirm>
           </div>
         </div>
         
-        <Tabs defaultValue="all" value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid grid-cols-5 mb-6">
-            <TabsTrigger value="all" className="rounded-md">
-              All ({notifications.length})
-            </TabsTrigger>
-            <TabsTrigger value="unread" className="rounded-md">
-              Unread ({unreadCount})
-            </TabsTrigger>
-            <TabsTrigger value="system" className="rounded-md">
-              System
-            </TabsTrigger>
-            <TabsTrigger value="rider" className="rounded-md">
-              Riders
-            </TabsTrigger>
-            <TabsTrigger value="emergency" className="rounded-md">
-              Emergency
-            </TabsTrigger>
-          </TabsList>
-          
-          <TabsContent value={activeTab} className="mt-0">
-            {filteredNotifications.length > 0 ? (
-              <div className="space-y-4">
-                {filteredNotifications.map(notification => (
-                  <Card 
-                    key={notification.id} 
-                    className={`bg-white shadow-md rounded-xl overflow-hidden border-none transition-all ${
-                      !notification.read ? 'border-l-4 border-l-cycling-red' : ''
-                    }`}
-                  >
-                    <CardContent className="p-4 flex items-start justify-between">
-                      <div className="flex gap-4 items-start">
-                        <div className={`p-2 rounded-full ${
-                          notification.type === 'emergency' 
-                            ? 'bg-red-100 text-cycling-red' 
-                            : notification.type === 'system'
-                              ? 'bg-blue-100 text-blue-500'
-                              : 'bg-gray-100 text-gray-700'
-                        }`}>
-                          <BellOutlined className="text-lg" />
-                        </div>
-                        
-                        <div>
-                          <div className="flex items-center">
-                            <h3 className="font-medium text-lg">
-                              {notification.title}
-                            </h3>
-                            {!notification.read && (
-                              <span className="ml-2 bg-cycling-red text-white text-xs px-2 py-0.5 rounded-full">
-                                New
-                              </span>
-                            )}
-                          </div>
-                          <p className="text-sm text-muted-foreground mt-1">
-                            {notification.message}
-                          </p>
-                          <p className="text-xs text-muted-foreground mt-2">
-                            {formatDate(notification.date)}
-                          </p>
-                        </div>
-                      </div>
-                      
-                      <div className="flex space-x-2">
-                        {!notification.read && (
-                          <Button 
-                            variant="outline" 
-                            size="icon"
-                            onClick={() => markAsRead(notification.id)}
-                            className="h-8 w-8 rounded-full"
-                          >
-                            <CheckOutlined />
-                          </Button>
-                        )}
-                        <Button 
-                          variant="outline" 
-                          size="icon" 
-                          onClick={() => deleteNotification(notification.id)}
-                          className="h-8 w-8 rounded-full text-cycling-red"
-                        >
-                          <DeleteOutlined />
-                        </Button>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            ) : (
-              <Card className="bg-white shadow-md rounded-xl overflow-hidden border-none">
-                <CardContent className="p-8 text-center">
-                  <BellOutlined className="text-4xl text-gray-300 mb-3" />
-                  <h3 className="text-xl font-medium text-gray-600">No notifications</h3>
-                  <p className="text-muted-foreground">
-                    {activeTab === 'all' 
-                      ? "You don't have any notifications yet."
-                      : `You don't have any ${activeTab === 'unread' ? 'unread' : activeTab} notifications.`
-                    }
-                  </p>
-                </CardContent>
-              </Card>
-            )}
-          </TabsContent>
-        </Tabs>
+        <Tabs 
+          defaultActiveKey="all" 
+          activeKey={activeTab}
+          onChange={setActiveTab}
+          items={[
+            { 
+              key: 'all', 
+              label: <>All ({notifications.length})</>, 
+              children: null 
+            },
+            { 
+              key: 'unread', 
+              label: <>Unread ({unreadCount})</>, 
+              children: null 
+            },
+            { 
+              key: 'system', 
+              label: 'System', 
+              children: null 
+            },
+            { 
+              key: 'rider', 
+              label: 'Riders', 
+              children: null 
+            },
+            { 
+              key: 'emergency', 
+              label: 'Emergency', 
+              children: null 
+            }
+          ]}
+        />
+        
+        <List
+          dataSource={filteredNotifications}
+          locale={{ emptyText: 'No notifications' }}
+          renderItem={(notification) => (
+            <List.Item
+              key={notification.id}
+              className={!notification.read ? 'border-l-4 border-l-red-500' : ''}
+              actions={[
+                !notification.read && (
+                  <Button 
+                    icon={<CheckOutlined />} 
+                    onClick={() => markAsRead(notification.id)}
+                  />
+                ),
+                <Button 
+                  danger
+                  icon={<DeleteOutlined />} 
+                  onClick={() => deleteNotification(notification.id)}
+                />
+              ]}
+            >
+              <List.Item.Meta
+                avatar={
+                  <Avatar 
+                    icon={getNotificationIcon(notification.type)} 
+                    className={notification.type === 'emergency' ? 'bg-red-100' : ''}
+                  />
+                }
+                title={
+                  <Space>
+                    {notification.title}
+                    {!notification.read && (
+                      <Badge 
+                        count="New" 
+                        style={{ backgroundColor: '#ff4d4f' }} 
+                      />
+                    )}
+                  </Space>
+                }
+                description={
+                  <Space direction="vertical" size={2}>
+                    <Text>{notification.message}</Text>
+                    <Text type="secondary" className="text-xs">
+                      {formatDate(notification.date)}
+                    </Text>
+                  </Space>
+                }
+              />
+            </List.Item>
+          )}
+        />
       </div>
     </DashboardLayout>
   );
