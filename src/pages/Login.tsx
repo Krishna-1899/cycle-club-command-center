@@ -7,7 +7,7 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
 import { loginUser } from '../redux/slices/authSlice';
-import { toast } from '@/components/ui/use-toast';
+import { useToast } from '../hooks/use-toast';
 import { AlertCircle } from 'lucide-react';
 
 const Login = () => {
@@ -15,6 +15,7 @@ const Login = () => {
   const { isAuthenticated, isLoading, error } = useAppSelector((state) => state.auth);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const { toast } = useToast();
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();

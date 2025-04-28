@@ -4,9 +4,6 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import { Provider } from "react-redux";
-import { PersistGate } from "redux-persist/integration/react";
-import { store, persistor } from "./redux/store";
 
 // Pages
 import Login from "./pages/Login";
@@ -23,29 +20,25 @@ import { ProtectedRoute } from "./components/auth/ProtectedRoute";
 const queryClient = new QueryClient();
 
 const App = () => (
-  <Provider store={store}>
-    <PersistGate loading={null} persistor={persistor}>
-      <QueryClientProvider client={queryClient}>
-        <TooltipProvider>
-          <Toaster />
-          <Sonner />
-          <BrowserRouter>
-            <Routes>
-              <Route path="/login" element={<Login />} />
-              <Route path="/sticker" element={<StickerVerification />} />
-              <Route path="/sticker/profile/:code" element={<PublicRiderProfile />} />
-              <Route path="/" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
-              <Route path="/clubs" element={<ProtectedRoute><Clubs /></ProtectedRoute>} />
-              <Route path="/riders" element={<ProtectedRoute><RiderManagement /></ProtectedRoute>} />
-              <Route path="/riders/:id" element={<ProtectedRoute><RiderProfile /></ProtectedRoute>} />
-              <Route path="/notifications" element={<ProtectedRoute><Notifications /></ProtectedRoute>} />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </BrowserRouter>
-        </TooltipProvider>
-      </QueryClientProvider>
-    </PersistGate>
-  </Provider>
+  <QueryClientProvider client={queryClient}>
+    <TooltipProvider>
+      <Toaster />
+      <Sonner />
+      <BrowserRouter>
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route path="/sticker" element={<StickerVerification />} />
+          <Route path="/sticker/profile/:code" element={<PublicRiderProfile />} />
+          <Route path="/" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+          <Route path="/clubs" element={<ProtectedRoute><Clubs /></ProtectedRoute>} />
+          <Route path="/riders" element={<ProtectedRoute><RiderManagement /></ProtectedRoute>} />
+          <Route path="/riders/:id" element={<ProtectedRoute><RiderProfile /></ProtectedRoute>} />
+          <Route path="/notifications" element={<ProtectedRoute><Notifications /></ProtectedRoute>} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </BrowserRouter>
+    </TooltipProvider>
+  </QueryClientProvider>
 );
 
 export default App;

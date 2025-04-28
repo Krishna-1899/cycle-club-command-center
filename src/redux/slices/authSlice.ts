@@ -1,7 +1,7 @@
 
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
-import { toast } from '../../../components/ui/use-toast';
+import { toast } from '../../hooks/use-toast';
 
 // Define the base URL for API calls
 const API_URL = 'https://api.example.com/';
