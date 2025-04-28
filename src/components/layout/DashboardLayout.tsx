@@ -3,7 +3,8 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { 
   UserOutlined, HomeOutlined, BellOutlined, LogoutOutlined,
-  MenuOutlined, CloseOutlined, RightOutlined, LeftOutlined
+  MenuOutlined, CloseOutlined, RightOutlined, LeftOutlined,
+  TeamOutlined
 } from '@ant-design/icons';
 import { Button } from '../ui/button';
 import { cn } from '@/lib/utils';
@@ -35,6 +36,7 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
 
   const navItems = [
     { name: 'Dashboard', path: '/', icon: HomeOutlined },
+    { name: 'Clubs', path: '/clubs', icon: TeamOutlined },
     { name: 'Riders', path: '/riders', icon: UserOutlined },
     { name: 'Notifications', path: '/notifications', icon: BellOutlined },
   ];
