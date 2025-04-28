@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -8,6 +9,7 @@ import { useState, useEffect } from "react";
 // Pages
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
+import Clubs from "./pages/Clubs"; // Import the Clubs component
 import RiderManagement from "./pages/RiderManagement";
 import RiderProfile from "./pages/RiderProfile";
 import Notifications from "./pages/Notifications";
