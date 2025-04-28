@@ -4,10 +4,17 @@ import DashboardLayout from '../components/layout/DashboardLayout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { mockRiders, mockRides, getUpcomingEvents } from '../data/mockData';
 import { Area, AreaChart, ResponsiveContainer, XAxis, YAxis, Tooltip, CartesianGrid } from 'recharts';
-import { TeamOutlined, TrophyOutlined, ClockCircleOutlined, HistoryOutlined } from '@ant-design/icons';
+import { 
+  TeamOutlined, 
+  TrophyOutlined, 
+  ClockCircleOutlined, 
+  HistoryOutlined,
+  CalendarOutlined,
+  CheckOutlined,
+  WarningOutlined
+} from '@ant-design/icons';
 import { Cake, Calendar } from 'lucide-react';
 
-// Mock data for the participation chart
 const participationData = [
   { month: 'Jan', participation: 35 },
   { month: 'Feb', participation: 38 },
@@ -23,7 +30,6 @@ const participationData = [
   { month: 'Dec', participation: 52 },
 ];
 
-// Mock data for top riders
 const topRiders = [
   { name: 'John Smith', rides: 42, distance: '1,254 km', rank: 1 },
   { name: 'Sarah Johnson', rides: 38, distance: '1,120 km', rank: 2 },
@@ -32,7 +38,6 @@ const topRiders = [
   { name: 'David Wilson', rides: 30, distance: '876 km', rank: 5 },
 ];
 
-// Mock data for recent activities
 const recentActivities = [
   { user: 'John Smith', action: 'completed a ride', details: 'Mountain Trail Challenge', time: '2 hours ago' },
   { user: 'Admin', action: 'added a new event', details: 'Weekend City Tour', time: '5 hours ago' },
@@ -41,22 +46,13 @@ const recentActivities = [
   { user: 'Emily Davis', action: 'earned a badge', details: 'Century Rider', time: '1 day ago' },
 ];
 
-import { 
-  TeamOutlined, 
-  CalendarOutlined, 
-  CheckOutlined, 
-  WarningOutlined 
-} from '@ant-design/icons';
-
 const Dashboard = () => {
-  // Calculate dashboard stats
   const totalMembers = mockRiders.length;
   const totalRides = mockRides.length;
   const activeRiders = mockRiders.filter(rider => rider.status === 'active').length;
   const inactiveRiders = totalMembers - activeRiders;
   const participationRate = ((activeRiders / totalMembers) * 100).toFixed(1);
   
-  // Get upcoming events (birthdays & anniversaries)
   const upcomingEvents = getUpcomingEvents(mockRiders, 7);
 
   return (
@@ -69,7 +65,6 @@ const Dashboard = () => {
           </div>
         </div>
 
-        {/* Stats Overview */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           <Card className="bg-white shadow-md rounded-xl border-none hover:shadow-lg transition-all">
             <CardHeader className="flex flex-row items-center justify-between pb-2">
@@ -117,7 +112,6 @@ const Dashboard = () => {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Participation Chart */}
           <Card className="lg:col-span-2 bg-white shadow-md rounded-xl border-none">
             <CardHeader>
               <CardTitle>Ride Participation Trends</CardTitle>
@@ -149,7 +143,6 @@ const Dashboard = () => {
             </CardContent>
           </Card>
 
-          {/* Upcoming Events */}
           <Card className="bg-white shadow-md rounded-xl border-none">
             <CardHeader className="flex flex-row items-center justify-between">
               <CardTitle>Upcoming Events</CardTitle>
@@ -170,7 +163,6 @@ const Dashboard = () => {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Top Riders */}
           <Card className="bg-white shadow-md rounded-xl border-none">
             <CardHeader className="flex flex-row items-center justify-between">
               <CardTitle>Top Riders</CardTitle>
@@ -195,7 +187,6 @@ const Dashboard = () => {
             </CardContent>
           </Card>
 
-          {/* Recent Activities */}
           <Card className="bg-white shadow-md rounded-xl border-none">
             <CardHeader className="flex flex-row items-center justify-between">
               <CardTitle>Recent Activities</CardTitle>
