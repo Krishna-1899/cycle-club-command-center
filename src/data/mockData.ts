@@ -35,6 +35,20 @@ export interface Ride {
   participants: string[]; // Rider IDs
 }
 
+// Club interface to match the data in clubData.ts
+export interface Club {
+  id: string;
+  name: string;
+  members: string[];
+  rides: number;
+  activeRiders: number;
+  location: string;
+}
+
+// Import mockClubs from clubData for re-export
+import { mockClubs } from './clubData';
+export { mockClubs };
+
 // Generate mock riders
 const generateMockRiders = (): Rider[] => {
   const bloodGroups = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'];
