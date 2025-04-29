@@ -102,14 +102,15 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
         collapsed={collapsed}
         width={240}
         className="shadow-lg"
+        style={{ background: '#FFFFFF' }}
       >
         <div className="p-4 flex items-center justify-center">
-          <h1 className="text-white font-bold text-xl">
+          <h1 className="text-black font-bold text-xl">
             {collapsed ? 'CC' : 'Cycle Club'}
           </h1>
         </div>
         <Menu
-          theme="dark"
+          theme="light"
           mode="inline"
           selectedKeys={[location.pathname]}
           items={menuItems}
