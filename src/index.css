@@ -97,6 +97,11 @@
 .ant-layout-sider {
   background: #FFFFFF;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.09);
+  border-right: 1px solid #e8e8e8;
+}
+
+.ant-layout-header {
+  border-bottom: 1px solid #e8e8e8;
 }
 
 /* Custom menu styling for selected items */
@@ -105,6 +110,10 @@
 }
 
 .custom-menu .ant-menu-item-selected a {
+  color: #FFFFFF !important;
+}
+
+.custom-menu .ant-menu-item-selected .anticon {
   color: #FFFFFF !important;
 }
 
