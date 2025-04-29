@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Layout, Menu, Avatar, Dropdown, Badge, Button } from 'antd';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import {
@@ -25,6 +25,16 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
   const { user, logout } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
+  
+  // Check if on mobile screen
+  const isMobile = window.innerWidth < 768;
+  
+  // Set collapsed to true on mobile by default
+  useEffect(() => {
+    if (isMobile) {
+      setCollapsed(true);
+    }
+  }, [isMobile]);
 
   const toggleSidebar = () => {
     setCollapsed(!collapsed);
@@ -34,27 +44,34 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
     logout();
     navigate('/login');
   };
+  
+  const handleMenuClick = () => {
+    // Collapse sidebar after menu click if on mobile
+    if (isMobile) {
+      setCollapsed(true);
+    }
+  };
 
   const menuItems = [
     {
       key: '/dashboard',
       icon: <DashboardOutlined />,
-      label: <Link to="/dashboard">Dashboard</Link>,
+      label: <Link to="/dashboard" onClick={handleMenuClick}>Dashboard</Link>,
     },
     {
       key: '/clubs',
       icon: <TeamOutlined />,
-      label: <Link to="/clubs">Clubs</Link>,
+      label: <Link to="/clubs" onClick={handleMenuClick}>Clubs</Link>,
     },
     {
       key: '/riders',
       icon: <TeamOutlined />,
-      label: <Link to="/riders">Riders</Link>,
+      label: <Link to="/riders" onClick={handleMenuClick}>Riders</Link>,
     },
     {
       key: '/notifications',
       icon: <BellOutlined />,
-      label: <Link to="/notifications">Notifications</Link>,
+      label: <Link to="/notifications" onClick={handleMenuClick}>Notifications</Link>,
     },
   ];
 
@@ -92,10 +109,11 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
           </h1>
         </div>
         <Menu
-          theme="light"
+          theme="dark"
           mode="inline"
           selectedKeys={[location.pathname]}
           items={menuItems}
+          className="custom-menu"
         />
       </Sider>
       <Layout>

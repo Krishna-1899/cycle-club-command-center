@@ -1,8 +1,9 @@
+
 import React from 'react';
 import { Link } from 'react-router-dom';
 import DashboardLayout from '../components/layout/DashboardLayout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { mockRiders, mockRides, getUpcomingEvents } from '../data/mockData';
+import { mockRiders, mockRides, getUpcomingEvents, mockClubs } from '../data/mockData';
 import { Area, AreaChart, ResponsiveContainer, XAxis, YAxis, Tooltip, CartesianGrid } from 'recharts';
 import { 
   TeamOutlined, 
@@ -11,9 +12,9 @@ import {
   HistoryOutlined,
   CalendarOutlined,
   CheckOutlined,
-  WarningOutlined
+  WarningOutlined,
+  AppstoreOutlined
 } from '@ant-design/icons';
-import ClubStats from '@/components/dashboard/ClubStats';
 
 const participationData = [
   { month: 'Jan', participation: 35 },
@@ -52,6 +53,7 @@ const Dashboard = () => {
   const activeRiders = mockRiders.filter(rider => rider.status === 'active').length;
   const inactiveRiders = totalMembers - activeRiders;
   const participationRate = ((activeRiders / totalMembers) * 100).toFixed(1);
+  const totalClubs = mockClubs.length;
   
   const upcomingEvents = getUpcomingEvents(mockRiders, 7);
 
@@ -66,7 +68,17 @@ const Dashboard = () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
-          <ClubStats />
+          <Card className="bg-white shadow-md rounded-xl border-none hover:shadow-lg transition-all">
+            <CardHeader className="flex flex-row items-center justify-between pb-2">
+              <CardTitle className="text-sm font-medium">Total Clubs</CardTitle>
+              <AppstoreOutlined className="text-xl" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{totalClubs}</div>
+              <p className="text-xs text-muted-foreground">Active cycling clubs</p>
+            </CardContent>
+          </Card>
+          
           <Card className="bg-white shadow-md rounded-xl border-none hover:shadow-lg transition-all">
             <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="text-sm font-medium">Total Members</CardTitle>
