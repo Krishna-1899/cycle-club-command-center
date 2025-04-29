@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { Layout, Menu, Avatar, Dropdown, Badge, Button } from 'antd';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import {
   DashboardOutlined,
   TeamOutlined,
@@ -24,16 +24,22 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
   const [collapsed, setCollapsed] = useState(false);
   const { user, logout } = useAuth();
   const location = useLocation();
+  const navigate = useNavigate();
 
   const toggleSidebar = () => {
     setCollapsed(!collapsed);
   };
 
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
+  };
+
   const menuItems = [
     {
-      key: '/',
+      key: '/dashboard',
       icon: <DashboardOutlined />,
-      label: <Link to="/">Dashboard</Link>,
+      label: <Link to="/dashboard">Dashboard</Link>,
     },
     {
       key: '/clubs',
@@ -67,7 +73,7 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
       key: 'logout',
       icon: <LogoutOutlined />,
       label: 'Logout',
-      onClick: logout,
+      onClick: handleLogout,
     },
   ];
 

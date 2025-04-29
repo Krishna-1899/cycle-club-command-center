@@ -15,6 +15,7 @@ import NotFound from "./pages/NotFound";
 import StickerVerification from "./pages/StickerVerification";
 import PublicRiderProfile from "./pages/PublicRiderProfile";
 import { ProtectedRoute } from "./components/auth/ProtectedRoute";
+import Index from "./pages/Index";
 
 const queryClient = new QueryClient();
 
@@ -33,10 +34,11 @@ const App = () => (
       <AuthProvider>
         <BrowserRouter>
           <Routes>
+            <Route path="/" element={<Index />} />
             <Route path="/login" element={<Login />} />
             <Route path="/sticker" element={<StickerVerification />} />
             <Route path="/sticker/profile/:code" element={<PublicRiderProfile />} />
-            <Route path="/" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+            <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
             <Route path="/clubs" element={<ProtectedRoute><Clubs /></ProtectedRoute>} />
             <Route path="/riders" element={<ProtectedRoute><RiderManagement /></ProtectedRoute>} />
             <Route path="/riders/:id" element={<ProtectedRoute><RiderProfile /></ProtectedRoute>} />
