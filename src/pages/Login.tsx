@@ -1,32 +1,34 @@
 
-import React, { useState, FormEvent } from 'react';
-import { Navigate } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Navigate, useNavigate } from 'react-router-dom';
 import { Card, Input, Button, Form, Alert, Typography } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
-import { useAppDispatch, useAppSelector } from '../redux/hooks';
-import { loginUser } from '../redux/slices/authSlice';
+import { useAuth } from '../contexts/AuthContext';
 import { toast } from 'sonner';
 
 const { Title, Text } = Typography;
 
 const Login = () => {
-  const dispatch = useAppDispatch();
-  const { isAuthenticated, isLoading, error } = useAppSelector((state) => state.auth);
+  const { login, isAuthenticated, isLoading } = useAuth();
+  const navigate = useNavigate();
+  const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = async (values: { email: string; password: string }) => {
-    // Dispatch login action
-    const resultAction = await dispatch(loginUser(values));
-    
-    if (loginUser.fulfilled.match(resultAction)) {
+    try {
+      setError(null);
+      await login(values.email, values.password);
       toast.success("Login successful", {
         description: "Welcome to Cycle Club Command Center!",
         duration: 3000,
       });
+      navigate('/dashboard');
+    } catch (err) {
+      setError((err as Error).message);
     }
   };
 
   if (isAuthenticated) {
-    return <Navigate to="/" replace />;
+    return <Navigate to="/dashboard" replace />;
   }
 
   return (
